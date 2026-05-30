@@ -1,0 +1,26 @@
+package com.app.copamundialfifa2026.data.remote
+
+import com.app.copamundialfifa2026.core.AppConstants
+import okhttp3.OkHttpClient
+import okhttp3.logging.HttpLoggingInterceptor
+import retrofit2.Retrofit
+import retrofit2.converter.gson.GsonConverterFactory
+
+object RetrofitClient {
+    private val loggingInterceptor = HttpLoggingInterceptor().apply {
+        level = HttpLoggingInterceptor.Level.BASIC
+    }
+
+    private val okHttpClient = OkHttpClient.Builder()
+        .addInterceptor(loggingInterceptor)
+        .build()
+
+    private val retrofit: Retrofit = Retrofit.Builder()
+        .baseUrl(AppConstants.Api.BASE_URL)
+        .client(okHttpClient)
+        .addConverterFactory(GsonConverterFactory.create())
+        .build()
+
+    val authApiService: AuthApiService by lazy { retrofit.create(AuthApiService::class.java) }
+    val ticketApiService: TicketApiService by lazy { retrofit.create(TicketApiService::class.java) }
+}
